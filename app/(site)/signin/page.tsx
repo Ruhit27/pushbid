@@ -1,0 +1,25 @@
+import type { Metadata } from "next";
+import { signInWithGoogle } from "@/app/actions";
+
+export const metadata: Metadata = { title: "Sign in" };
+
+export default async function SignInPage({ searchParams }: PageProps<"/signin">) {
+  const sp = await searchParams;
+  const next = typeof sp.next === "string" ? sp.next : typeof sp.callbackUrl === "string" ? sp.callbackUrl : "/";
+  const error = typeof sp.error === "string" ? sp.error : "";
+  return (
+    <div className="mx-auto grid max-w-sm gap-4 py-16 text-center">
+      <h1 className="text-3xl font-extrabold tracking-tight">Sign in to Push Bid</h1>
+      <p className="text-muted">New accounts start with free credits to spend on Claims.</p>
+      {error && (
+        <p className="rounded-lg bg-brand-soft px-3 py-2 text-sm text-brand-strong">
+          {error === "Configuration" ? "Google sign-in isn't set up yet." : "Sign-in failed. Please try again."}
+        </p>
+      )}
+      <form action={signInWithGoogle}>
+        <input type="hidden" name="next" value={next} />
+        <button className="w-full rounded-xl bg-fg px-5 py-3 font-bold text-bg hover:opacity-90">Continue with Google</button>
+      </form>
+    </div>
+  );
+}

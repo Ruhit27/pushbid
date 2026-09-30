@@ -49,7 +49,7 @@ export async function BoardPage({ board, category, page, amount }: Options) {
   const claimHref = (amt: number) => `${withParam(boardHref, "amount", amt)}#claim`;
 
   return (
-    <div className="grid grid-cols-1 gap-10">
+    <div className="grid grid-cols-1 gap-8">
       <CategoryStrip categories={categories} active={category?.slug} />
 
       <div className="grid justify-items-center gap-3 text-center">
@@ -86,7 +86,7 @@ export async function BoardPage({ board, category, page, amount }: Options) {
         signInNext={boardHref}
       />
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1fr)_300px]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="min-w-0">
           <BoardList
             rows={main.rows}
@@ -108,7 +108,7 @@ export async function BoardPage({ board, category, page, amount }: Options) {
           {todayTop && (
             <section>
               <div className="flex items-center justify-between">
-                <h2 className="flex items-center gap-2 text-lg font-semibold">
+                <h2 className="flex items-center gap-2 font-semibold">
                   <span className="h-2 w-2 rounded-full bg-brand" /> Today&apos;s ranking
                 </h2>
                 <Link href={todayHref} className="flex items-center text-sm font-medium text-brand hover:underline">
@@ -116,14 +116,14 @@ export async function BoardPage({ board, category, page, amount }: Options) {
                 </Link>
               </div>
               {todayTop.rows.length ? (
-                <ol className="mt-4 grid gap-4">
+                <ol className="mt-3 grid gap-3">
                   {todayTop.rows.map((r) => (
                     <li key={r.id}>
                       <Link href={`/product/${r.slug}`} className="group flex items-center gap-3">
                         <span className="w-7 text-sm font-semibold text-muted tabular-nums">#{r.rank}</span>
-                        <ListingIcon src={r.iconUrl} size={36} rounded="rounded-full" />
-                        <span className="min-w-0 flex-1 truncate font-medium group-hover:text-brand">{r.title}</span>
-                        <span className="font-semibold text-brand tabular-nums">{usd(r.spend)}</span>
+                        <ListingIcon src={r.iconUrl} size={30} rounded="rounded-full" />
+                        <span className="min-w-0 flex-1 truncate text-sm font-medium group-hover:text-brand">{r.title}</span>
+                        <span className="text-sm font-semibold text-brand tabular-nums">{usd(r.spend)}</span>
                       </Link>
                     </li>
                   ))}

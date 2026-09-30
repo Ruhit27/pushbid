@@ -97,7 +97,7 @@ export function CategorySelect({
         aria-expanded={open}
         aria-controls={listId}
         aria-label={selected ? `Category: ${selected.name}` : "Choose a category"}
-        className="flex h-14 w-full items-center gap-2 rounded-full border border-line bg-surface px-5 text-left transition hover:border-fg/30 focus:border-brand focus:outline-none disabled:opacity-60"
+        className="flex h-12 w-full items-center gap-2 rounded-full border border-line bg-surface px-4 text-sm text-left transition hover:border-fg/30 focus:border-brand focus:outline-none disabled:opacity-60"
       >
         {selected ? (
           <>

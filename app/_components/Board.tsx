@@ -27,16 +27,16 @@ export function ListingIcon({ src, size = 40, rounded = "rounded-xl" }: { src: s
 export function BoardItem({ row, claimHref }: { row: BoardRow; claimHref?: (amount: number) => string }) {
   const amount = amountToTakeRank(row.rank, row.spend);
   const top = row.rank <= 3;
-  const iconSize = row.rank === 1 ? 88 : top ? 80 : 56;
+  const iconSize = row.rank === 1 ? 64 : top ? 60 : 44;
   return (
     <li
       id={`rank-${row.slug}`}
-      className={`group relative scroll-mt-24 rounded-[28px] transition ${
-        top ? "bg-brand-soft px-6 py-5" : "bg-surface-2/70 px-5 py-4 hover:bg-surface-2"
+      className={`group relative scroll-mt-24 rounded-3xl transition ${
+        top ? "bg-brand-soft px-5 py-4" : "bg-surface-2/70 px-4 py-3 hover:bg-surface-2"
       }`}
     >
-      <div className="flex items-center gap-4 sm:gap-5">
-        <span className={`w-9 shrink-0 text-center font-semibold tabular-nums text-brand ${top ? "text-xl" : "text-base"}`}>#{row.rank}</span>
+      <div className="flex items-center gap-3 sm:gap-4">
+        <span className={`w-8 shrink-0 text-center font-semibold tabular-nums text-brand ${top ? "text-lg" : "text-sm"}`}>#{row.rank}</span>
         <a href={`/go/${row.id}`} target="_blank" rel="noopener" className="shrink-0" aria-label={`Open ${row.title}`}>
           <ListingIcon src={row.iconUrl} size={iconSize} rounded="rounded-2xl" />
         </a>
@@ -46,17 +46,17 @@ export function BoardItem({ row, claimHref }: { row: BoardRow; claimHref?: (amou
               href={`/go/${row.id}`}
               target="_blank"
               rel="noopener"
-              className={`truncate font-semibold transition hover:text-brand ${top ? "text-lg sm:text-xl" : "text-base"}`}
+              className={`truncate font-semibold transition hover:text-brand ${top ? "text-base sm:text-lg" : "text-[15px]"}`}
             >
               {row.title}
             </a>
-            <span className={`shrink-0 font-semibold tabular-nums text-brand ${top ? "text-lg sm:text-xl" : "text-base"}`}>{usd(row.spend)}</span>
+            <span className={`shrink-0 font-semibold tabular-nums text-brand ${top ? "text-base sm:text-lg" : "text-[15px]"}`}>{usd(row.spend)}</span>
           </div>
-          {row.description && <p className={`mt-0.5 truncate text-muted ${top ? "text-base" : "text-sm"}`}>{row.description}</p>}
-          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
+          {row.description && <p className={`mt-0.5 truncate text-muted ${top ? "text-sm" : "text-[13px]"}`}>{row.description}</p>}
+          <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
             {row.category && (
               <Link href={`/category/${row.category.slug}`} className="flex items-center gap-1 font-semibold text-fg hover:text-brand">
-                <CategoryIcon icon={row.category.icon} size={14} /> {row.category.shortName}
+                <CategoryIcon icon={row.category.icon} size={13} /> {row.category.shortName}
               </Link>
             )}
             <span aria-hidden="true">·</span>
@@ -89,7 +89,7 @@ export function BoardList({ rows, claimHref, empty }: { rows: BoardRow[]; claimH
     return <div className="rounded-[28px] border border-dashed border-line p-10 text-center text-muted">{empty ?? "Nobody here yet."}</div>;
   }
   return (
-    <ol className="grid gap-4">
+    <ol className="grid gap-3">
       {rows.map((r) => (
         <BoardItem key={r.id} row={r} claimHref={claimHref} />
       ))}
@@ -100,11 +100,11 @@ export function BoardList({ rows, claimHref, empty }: { rows: BoardRow[]; claimH
 /** The centered All-time / Today switch. */
 export function BoardTabs({ active, base = "" }: { active: BoardKind; base?: string }) {
   const tab = (on: boolean) =>
-    `flex items-center gap-2 rounded-full px-4 py-1.5 font-semibold transition ${on ? "bg-brand text-white shadow-sm" : "text-brand hover:bg-brand-tint"}`;
+    `flex items-center gap-1.5 rounded-full px-3.5 py-1 text-sm font-semibold transition ${on ? "bg-brand text-white shadow-sm" : "text-brand hover:bg-brand-tint"}`;
   return (
     <div className="inline-flex rounded-full border border-line bg-surface p-1">
       <Link href={base || "/"} className={tab(active === "all-time")}>
-        <Trophy size={17} strokeWidth={1.75} aria-hidden="true" /> All-time
+        <Trophy size={15} strokeWidth={1.75} aria-hidden="true" /> All-time
       </Link>
       <Link href={base ? `${base}?board=today` : "/today"} className={tab(active === "today")}>
         <span className={`h-2 w-2 rounded-full ${active === "today" ? "bg-white" : "bg-brand"}`} /> Today

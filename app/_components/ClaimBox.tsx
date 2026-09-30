@@ -107,19 +107,19 @@ export function ClaimBox(props: Props) {
   }
 
   const roundButton =
-    "grid h-7 w-7 place-items-center rounded-full bg-brand-soft text-brand transition hover:bg-brand hover:text-white sm:h-8 sm:w-8";
+    "grid h-6 w-6 place-items-center rounded-full bg-brand-soft text-brand transition hover:bg-brand hover:text-white sm:h-7 sm:w-7";
 
   return (
     <section id="claim" className="scroll-mt-24">
       <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-center">
-        <h2 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
           Claim {props.board === "today" ? `today's ${heading}` : heading} for
         </h2>
         <div className="flex items-center gap-2">
           <button type="button" onClick={() => step(-1)} className={roundButton} aria-label="Decrease amount">
             <Minus size={14} strokeWidth={2.5} />
           </button>
-          <label className="flex items-center text-4xl font-semibold tabular-nums text-brand sm:text-5xl">
+          <label className="flex items-center text-3xl font-semibold tabular-nums text-brand sm:text-4xl">
             <span>$</span>
             <span className="sr-only">Amount in dollars</span>
             <input
@@ -137,15 +137,15 @@ export function ClaimBox(props: Props) {
       </div>
 
       <form
-        className="mx-auto mt-8 grid grid-cols-1 max-w-4xl gap-3 md:grid-cols-[1fr_320px_auto]"
+        className="mx-auto mt-6 grid grid-cols-1 max-w-3xl gap-2.5 md:grid-cols-[1fr_260px_auto]"
         onSubmit={(e) => {
           e.preventDefault();
           submit();
         }}
       >
-        <label className="flex h-14 items-center gap-3 rounded-full border border-line bg-surface px-2.5 transition focus-within:border-brand">
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-surface-2 text-muted">
-            <Globe size={18} strokeWidth={1.75} />
+        <label className="flex h-12 items-center gap-2.5 rounded-full border border-line bg-surface px-2 transition focus-within:border-brand">
+          <span className="grid h-8 w-8 place-items-center rounded-full bg-surface-2 text-muted">
+            <Globe size={16} strokeWidth={1.75} />
           </span>
           <input
             value={link}
@@ -154,14 +154,14 @@ export function ClaimBox(props: Props) {
               setPreview(null);
             }}
             placeholder="Your product URL or @handle"
-            className="h-full min-w-0 flex-1 bg-transparent text-lg outline-none placeholder:text-muted"
+            className="h-full min-w-0 flex-1 bg-transparent outline-none placeholder:text-muted"
             aria-label="Product link or X handle"
           />
         </label>
         <CategorySelect categories={props.categories} value={categoryId} onChange={setCategoryId} disabled={!!preview?.existing} />
         <button
           disabled={pending || !link.trim() || !!preview}
-          className="h-14 whitespace-nowrap rounded-full bg-brand px-7 text-lg font-semibold text-white transition hover:bg-brand-strong disabled:opacity-45"
+          className="h-12 whitespace-nowrap rounded-full bg-brand px-6 font-semibold text-white transition hover:bg-brand-strong disabled:opacity-45"
         >
           {pending && !preview ? "Checking…" : "Claim rank"}
         </button>
@@ -171,7 +171,7 @@ export function ClaimBox(props: Props) {
         <input type="hidden" name="next" value={`${props.signInNext}#claim`} />
       </form>
 
-      <div className="mx-auto max-w-4xl">
+      <div className="mx-auto max-w-3xl">
         {!props.signedIn && (
           <p className="mt-3 text-center text-sm text-muted">You&apos;ll sign in with Google to claim. New accounts get free credits.</p>
         )}

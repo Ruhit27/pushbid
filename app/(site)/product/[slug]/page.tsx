@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BoardList, ListingIcon } from "@/app/_components/Board";
+import { CategoryIcon } from "@/app/_components/CategoryIcon";
 import { CopyLink } from "@/app/_components/CopyLink";
+import { categoryIcon } from "@/lib/category-icons";
 import { allTimeBoard, dayBoard, listingRanks } from "@/lib/boards";
 import { connectDb } from "@/lib/db";
 import { compact, timeAgo, usd } from "@/lib/format";
@@ -56,13 +58,18 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
       <header className="flex flex-col gap-5 sm:flex-row sm:items-start">
         <ListingIcon src={listing.iconUrl} size={72} />
         <div className="min-w-0 flex-1">
-          <h1 className="text-3xl font-extrabold tracking-tight">{listing.title}</h1>
-          <p className="mt-1 text-sm text-muted">
-            {category?.name} · {host} · {timeAgo(listing.createdAt)} · {compact(listing.clicks)} clicks
+          <h1 className="text-3xl font-semibold tracking-tight">{listing.title}</h1>
+          <p className="mt-1 flex flex-wrap items-center gap-x-1.5 text-sm text-muted">
+            {category && (
+              <span className="flex items-center gap-1 font-semibold text-fg">
+                <CategoryIcon icon={categoryIcon(category.slug, category.name)} size={14} /> {category.name}
+              </span>
+            )}
+            · {host} · {timeAgo(listing.createdAt)} · {compact(listing.clicks)} clicks
           </p>
           {listing.description && <p className="mt-3 max-w-2xl">{listing.description}</p>}
           <div className="mt-4 flex flex-wrap gap-2">
-            <a href={`/go/${id}`} target="_blank" rel="noopener" className="rounded-xl bg-brand px-5 py-2.5 font-bold text-white hover:bg-brand-strong">
+            <a href={`/go/${id}`} target="_blank" rel="noopener" className="rounded-full bg-brand px-5 py-2.5 font-semibold text-white hover:bg-brand-strong">
               Visit
             </a>
             <CopyLink />
@@ -70,7 +77,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
         </div>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-3">
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <Card label="All-time Spend" value={usd(listing.totalSpend)} />
         <Card
           label="Category rank"
@@ -81,8 +88,8 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
         <Card label="Overall rank" value={`#${ranks.overall}`} note={`of ${compact(ranks.overallCount)} on the board`} href={`/#rank-${listing.slug}`} />
       </section>
 
-      <section className="rounded-2xl border border-line bg-surface p-5">
-        <h2 className="text-lg font-bold">About this ranking</h2>
+      <section className="rounded-3xl border border-line bg-surface p-5">
+        <h2 className="text-lg font-semibold">About this ranking</h2>
         <ul className="mt-3 grid gap-2 text-muted">
           <li>
             {listing.raises > 0
@@ -108,7 +115,7 @@ export default async function ProductPage({ params }: PageProps<"/product/[slug]
       {related && related.rows.filter((r) => r.id !== id).length > 0 && (
         <section>
           <div className="flex items-baseline justify-between">
-            <h2 className="text-lg font-bold">Also in {category?.name}</h2>
+            <h2 className="text-lg font-semibold">Also in {category?.name}</h2>
             <Link href={`/category/${category?.slug}`} className="text-sm text-muted hover:text-fg">
               See all →
             </Link>
@@ -126,15 +133,15 @@ function Card({ label, value, note, href }: { label: string; value: string; note
   const body = (
     <>
       <p className="text-xs text-muted">{label}</p>
-      <p className="mt-1 text-3xl font-extrabold tabular-nums tracking-tight">{value}</p>
+      <p className="mt-1 text-3xl font-semibold tabular-nums tracking-tight">{value}</p>
       {note && <p className="text-xs text-muted">{note}</p>}
     </>
   );
   return href ? (
-    <Link href={href} className="rounded-2xl border border-line bg-surface p-4 hover:border-brand">
+    <Link href={href} className="rounded-3xl border border-line bg-surface p-4 hover:border-brand">
       {body}
     </Link>
   ) : (
-    <div className="rounded-2xl border border-line bg-surface p-4">{body}</div>
+    <div className="rounded-3xl border border-line bg-surface p-4">{body}</div>
   );
 }

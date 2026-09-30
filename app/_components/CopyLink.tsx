@@ -12,7 +12,7 @@ export function CopyLink() {
         setCopied(true);
         setTimeout(() => setCopied(false), 1500);
       }}
-      className="rounded-xl border border-line px-5 py-2.5 font-semibold hover:border-fg"
+      className="rounded-full border border-line px-5 py-2.5 font-semibold hover:border-fg"
     >
       {copied ? "Copied!" : "Copy link"}
     </button>

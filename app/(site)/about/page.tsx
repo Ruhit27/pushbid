@@ -21,8 +21,8 @@ export default async function AboutPage() {
           [compact(stats.addedToday), "added today"],
           [usd(stats.todaySpend), "spent today"],
         ].map(([v, l]) => (
-          <div key={l} className="rounded-2xl border border-line bg-surface p-4">
-            <p className="text-2xl font-extrabold tabular-nums">{v}</p>
+          <div key={l} className="rounded-3xl border border-line bg-surface p-4">
+            <p className="text-2xl font-semibold tabular-nums">{v}</p>
             <p className="text-xs text-muted">{l}</p>
           </div>
         ))}

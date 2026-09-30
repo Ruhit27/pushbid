@@ -17,8 +17,8 @@ export default async function AdminDashboard() {
   return (
     <div className="grid gap-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-extrabold tracking-tight">Dashboard</h1>
-        <Link href="/admin/listings/new" className="rounded-xl bg-brand px-4 py-2 font-bold text-white hover:bg-brand-strong">
+        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+        <Link href="/admin/listings/new" className="rounded-full bg-brand px-4 py-2 font-semibold text-white hover:bg-brand-strong">
           + Add listing
         </Link>
       </div>
@@ -32,15 +32,15 @@ export default async function AdminDashboard() {
           ["Added today", compact(stats.addedToday)],
           ["Demo listings", compact(demo)],
         ].map(([label, value]) => (
-          <div key={label} className="rounded-2xl border border-line bg-surface p-4">
+          <div key={label} className="rounded-3xl border border-line bg-surface p-4">
             <p className="text-xs text-muted">{label}</p>
-            <p className="mt-1 text-2xl font-extrabold tabular-nums">{value}</p>
+            <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
           </div>
         ))}
       </section>
 
-      <section className="rounded-2xl border border-line bg-surface p-5">
-        <h2 className="font-bold">Demo data</h2>
+      <section className="rounded-3xl border border-line bg-surface p-5">
+        <h2 className="font-semibold">Demo data</h2>
         <p className="mt-1 text-sm text-muted">
           {demo
             ? `${demo} demo listing${demo === 1 ? " is" : "s are"} on the board. Delete them, and their Claims, before you launch.`

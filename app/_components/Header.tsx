@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { signInWithGoogle } from "@/app/actions";
-import { usd } from "@/lib/format";
+import { siteStats } from "@/lib/boards";
+import { compact, usd } from "@/lib/format";
 import { getViewer } from "@/lib/viewer";
 import { Logo } from "./Logo";
+import { SearchDialog } from "./SearchDialog";
+import { ThemeToggle } from "./ThemeToggle";
 
 const nav = [
   { href: "/daily", label: "Daily" },
@@ -12,42 +15,61 @@ const nav = [
 ];
 
 export async function Header() {
-  const viewer = await getViewer();
+  const [viewer, stats] = await Promise.all([getViewer(), siteStats()]);
   return (
-    <header className="sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur">
-      <div className="mx-auto flex h-14 max-w-6xl items-center gap-4 px-4">
-        <Link href="/" aria-label="Push Bid home">
+    <header className="mx-auto w-full max-w-6xl px-4 pt-5">
+      <div className="flex items-center gap-3">
+        <Link href="/" aria-label="Push Bid home" className="shrink-0">
           <Logo />
         </Link>
-        <nav className="hidden items-center gap-1 text-sm sm:flex">
+        <Link
+          href="/about"
+          className="hidden items-center gap-1.5 rounded-full border border-line px-3 py-1.5 text-xs text-muted transition hover:border-fg md:flex"
+        >
+          <span className="h-2 w-2 rounded-full bg-ok" />
+          <span className="font-semibold text-ok">{compact(stats.listings)} listings</span>
+          <span>· {usd(stats.todaySpend)} spent today ·</span>
+          <span className="font-medium text-fg">stats →</span>
+        </Link>
+        <nav className="ml-auto hidden items-center gap-1 lg:flex">
           {nav.map((n) => (
-            <Link key={n.href} href={n.href} className="rounded-md px-2.5 py-1.5 text-muted hover:bg-surface-2 hover:text-fg">
+            <Link key={n.href} href={n.href} className="rounded-full px-3 py-2 font-medium text-muted transition hover:text-fg">
               {n.label}
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-2">
+        <div className="ml-auto flex items-center gap-1.5 lg:ml-2">
+          <SearchDialog />
           {viewer ? (
-            <Link href="/account" className="flex items-center gap-2 rounded-full border border-line bg-surface py-1 pr-3 pl-1 text-sm hover:border-brand">
+            <Link
+              href="/account"
+              className="flex items-center gap-2 rounded-full border border-line bg-surface py-1 pr-3 pl-1 text-sm transition hover:border-brand"
+              title="Your account"
+            >
               {viewer.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={viewer.image} alt="" className="h-6 w-6 rounded-full" referrerPolicy="no-referrer" />
+                <img src={viewer.image} alt="" className="h-7 w-7 rounded-full" referrerPolicy="no-referrer" />
               ) : (
-                <span className="h-6 w-6 rounded-full bg-brand" />
+                <span className="h-7 w-7 rounded-full bg-brand" />
               )}
               <span className="font-semibold tabular-nums">{usd(viewer.credits)}</span>
-              <span className="hidden text-muted sm:inline">credits</span>
             </Link>
           ) : (
             <form action={signInWithGoogle}>
-              <button className="rounded-full bg-fg px-3.5 py-1.5 text-sm font-semibold text-bg hover:opacity-90">Sign in</button>
+              <button className="rounded-full px-3 py-2 text-sm font-semibold text-fg transition hover:bg-surface-2">Sign in</button>
             </form>
           )}
+          <ThemeToggle />
         </div>
       </div>
-      <nav className="flex gap-1 overflow-x-auto px-4 pb-2 text-sm sm:hidden">
+      <Link href="/about" className="mt-3 flex w-fit items-center gap-1.5 rounded-full border border-line px-3 py-1 text-xs text-muted md:hidden">
+        <span className="h-2 w-2 rounded-full bg-ok" />
+        <span className="font-semibold text-ok">{compact(stats.listings)} listings</span>
+        <span>· {usd(stats.todaySpend)} spent today · stats →</span>
+      </Link>
+      <nav className="no-scrollbar mt-2 flex gap-1 overflow-x-auto lg:hidden">
         {nav.map((n) => (
-          <Link key={n.href} href={n.href} className="rounded-md px-2 py-1 text-muted">
+          <Link key={n.href} href={n.href} className="shrink-0 rounded-full px-3 py-1.5 text-sm font-medium text-muted hover:text-fg">
             {n.label}
           </Link>
         ))}

@@ -45,32 +45,32 @@ export default async function AccountPage() {
           <img src={viewer.image} alt="" className="h-14 w-14 rounded-full" referrerPolicy="no-referrer" />
         )}
         <div className="flex-1">
-          <h1 className="text-2xl font-extrabold tracking-tight">{viewer.name || "My account"}</h1>
+          <h1 className="text-2xl font-semibold tracking-tight">{viewer.name || "My account"}</h1>
           <p className="text-sm text-muted">{viewer.email}</p>
         </div>
         <form action={signOutAction}>
-          <button className="rounded-xl border border-line px-4 py-2 text-sm font-semibold hover:border-fg">Sign out</button>
+          <button className="rounded-full border border-line px-4 py-2 text-sm font-semibold hover:border-fg">Sign out</button>
         </form>
       </header>
 
-      <section className="grid gap-3 sm:grid-cols-2">
-        <div className="rounded-2xl border border-brand/50 bg-brand-soft p-5">
+      <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="rounded-3xl border border-brand/50 bg-brand-soft p-5">
           <p className="text-sm text-muted">Credits balance</p>
-          <p className="mt-1 text-4xl font-extrabold tabular-nums tracking-tight text-brand">{usd(viewer.credits)}</p>
+          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight text-brand">{usd(viewer.credits)}</p>
         </div>
-        <div className="rounded-2xl border border-line bg-surface p-5">
+        <div className="rounded-3xl border border-line bg-surface p-5">
           <p className="text-sm text-muted">Spent on Claims</p>
-          <p className="mt-1 text-4xl font-extrabold tabular-nums tracking-tight">{usd(spent)}</p>
+          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight">{usd(spent)}</p>
         </div>
       </section>
 
       <section>
-        <h2 className="text-lg font-bold">Listings you&apos;ve spent on</h2>
+        <h2 className="text-lg font-semibold">Listings you&apos;ve spent on</h2>
         {byListing.size ? (
           <ul className="mt-3 grid gap-2">
             {[...byListing.values()].map(({ listing, mine }) => (
               <li key={listing.slug}>
-                <Link href={listing.hidden ? "#" : `/product/${listing.slug}`} className="flex items-center gap-3 rounded-2xl border border-line bg-surface p-3 hover:border-brand">
+                <Link href={listing.hidden ? "#" : `/product/${listing.slug}`} className="flex items-center gap-3 rounded-3xl border border-line bg-surface p-3 hover:border-brand">
                   <ListingIcon src={listing.iconUrl} size={36} />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate font-semibold">{listing.title}</span>
@@ -78,7 +78,7 @@ export default async function AccountPage() {
                       {listing.hidden ? "Removed from the board" : `All-time Spend ${usd(listing.totalSpend)}`}
                     </span>
                   </span>
-                  <span className="text-sm font-bold tabular-nums">you: {usd(mine)}</span>
+                  <span className="text-sm font-semibold tabular-nums">you: {usd(mine)}</span>
                 </Link>
               </li>
             ))}
@@ -92,8 +92,8 @@ export default async function AccountPage() {
 
       {claims.length > 0 && (
         <section>
-          <h2 className="text-lg font-bold">Claim history</h2>
-          <div className="mt-3 overflow-x-auto rounded-2xl border border-line">
+          <h2 className="text-lg font-semibold">Claim history</h2>
+          <div className="mt-3 overflow-x-auto rounded-3xl border border-line">
             <table className="w-full text-sm">
               <thead className="bg-surface-2 text-left text-xs text-muted">
                 <tr>

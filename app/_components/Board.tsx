@@ -1,9 +1,11 @@
+import { Trophy } from "lucide-react";
 import Link from "next/link";
-import type { BoardRow } from "@/lib/boards";
+import type { BoardKind, BoardRow } from "@/lib/boards";
 import { compact, timeAgo, usd } from "@/lib/format";
 import { amountToTakeRank } from "@/lib/rules";
+import { CategoryIcon } from "./CategoryIcon";
 
-export function ListingIcon({ src, size = 40 }: { src: string; size?: number }) {
+export function ListingIcon({ src, size = 40, rounded = "rounded-xl" }: { src: string; size?: number; rounded?: string }) {
   return src ? (
     // eslint-disable-next-line @next/next/no-img-element
     <img
@@ -13,76 +15,81 @@ export function ListingIcon({ src, size = 40 }: { src: string; size?: number }) 
       height={size}
       loading="lazy"
       referrerPolicy="no-referrer"
-      className="shrink-0 rounded-lg border border-line bg-surface object-contain"
+      className={`shrink-0 bg-surface object-contain ${rounded}`}
       style={{ width: size, height: size }}
     />
   ) : (
-    <span className="shrink-0 rounded-lg bg-surface-2" style={{ width: size, height: size }} />
+    <span className={`shrink-0 bg-surface-2 ${rounded}`} style={{ width: size, height: size }} />
   );
 }
 
-const medal = ["text-gold", "text-muted", "text-[#b0703c]"];
-
-/** One ranked Listing. `claimHref` builds the link that prefills the Claim box with this Rank's price. */
+/** One ranked Listing. `claimHref` builds the link that prefills the Claim box with this Rank's amount. */
 export function BoardItem({ row, claimHref }: { row: BoardRow; claimHref?: (amount: number) => string }) {
   const amount = amountToTakeRank(row.rank, row.spend);
   const top = row.rank <= 3;
+  const iconSize = row.rank === 1 ? 88 : top ? 80 : 56;
   return (
     <li
       id={`rank-${row.slug}`}
-      className={`group relative rounded-2xl border bg-surface p-4 transition hover:border-brand/60 ${
-        row.rank === 1 ? "border-brand/50 shadow-[0_0_0_4px_var(--brand-soft)]" : "border-line"
+      className={`group relative scroll-mt-24 rounded-[28px] transition ${
+        top ? "bg-brand-soft px-6 py-5" : "bg-surface-2/70 px-5 py-4 hover:bg-surface-2"
       }`}
     >
-      <div className="flex items-start gap-3">
-        <span className={`w-10 shrink-0 pt-2 text-right text-sm font-extrabold tabular-nums ${top ? medal[row.rank - 1] : "text-muted"}`}>
-          #{row.rank}
-        </span>
+      <div className="flex items-center gap-4 sm:gap-5">
+        <span className={`w-9 shrink-0 text-center font-semibold tabular-nums text-brand ${top ? "text-xl" : "text-base"}`}>#{row.rank}</span>
         <a href={`/go/${row.id}`} target="_blank" rel="noopener" className="shrink-0" aria-label={`Open ${row.title}`}>
-          <ListingIcon src={row.iconUrl} size={top ? 48 : 40} />
+          <ListingIcon src={row.iconUrl} size={iconSize} rounded="rounded-2xl" />
         </a>
         <div className="min-w-0 flex-1">
-          <div className="flex items-start justify-between gap-3">
-            <a href={`/go/${row.id}`} target="_blank" rel="noopener" className={`font-bold leading-snug hover:text-brand ${top ? "text-lg" : ""}`}>
+          <div className="flex items-baseline justify-between gap-4">
+            <a
+              href={`/go/${row.id}`}
+              target="_blank"
+              rel="noopener"
+              className={`truncate font-semibold transition hover:text-brand ${top ? "text-lg sm:text-xl" : "text-base"}`}
+            >
               {row.title}
             </a>
-            <span className={`shrink-0 font-extrabold tabular-nums ${row.rank === 1 ? "text-xl text-brand" : "text-lg"}`}>{usd(row.spend)}</span>
+            <span className={`shrink-0 font-semibold tabular-nums text-brand ${top ? "text-lg sm:text-xl" : "text-base"}`}>{usd(row.spend)}</span>
           </div>
-          {row.description && <p className="mt-1 line-clamp-2 text-sm text-muted">{row.description}</p>}
-          <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
+          {row.description && <p className={`mt-0.5 truncate text-muted ${top ? "text-base" : "text-sm"}`}>{row.description}</p>}
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted">
             {row.category && (
-              <Link href={`/category/${row.category.slug}`} className="rounded-full bg-surface-2 px-2 py-0.5 hover:text-fg">
-                {row.category.shortName}
+              <Link href={`/category/${row.category.slug}`} className="flex items-center gap-1 font-semibold text-fg hover:text-brand">
+                <CategoryIcon icon={row.category.icon} size={14} /> {row.category.shortName}
               </Link>
             )}
+            <span aria-hidden="true">·</span>
             <span>{timeAgo(row.createdAt)}</span>
-            <span>·</span>
-            <span>{row.host}</span>
-            <span>·</span>
+            <span aria-hidden="true">·</span>
+            <span className="font-medium text-fg">{row.host}</span>
+            <span aria-hidden="true">·</span>
             <span>{compact(row.clicks)} clicks</span>
-            <span>·</span>
-            <Link href={`/product/${row.slug}`} className="underline-offset-2 hover:text-fg hover:underline">
+            <span aria-hidden="true">·</span>
+            <Link href={`/product/${row.slug}`} className="hover:text-fg">
               see details
             </Link>
-            {claimHref && (
-              <Link
-                href={claimHref(amount)}
-                className="ml-auto rounded-full border border-line px-2.5 py-1 font-semibold text-fg transition hover:border-brand hover:bg-brand hover:text-white"
-              >
-                claim this rank for {usd(amount)}
-              </Link>
-            )}
           </div>
         </div>
       </div>
+      {claimHref && (
+        <Link
+          href={claimHref(amount)}
+          className="absolute right-5 -bottom-3 z-10 rounded-full bg-brand px-3.5 py-1.5 text-xs font-semibold text-white shadow-md transition [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:focus:opacity-100"
+        >
+          claim this rank for {usd(amount)}
+        </Link>
+      )}
     </li>
   );
 }
 
 export function BoardList({ rows, claimHref, empty }: { rows: BoardRow[]; claimHref?: (amount: number) => string; empty?: React.ReactNode }) {
-  if (!rows.length) return <div className="rounded-2xl border border-dashed border-line p-8 text-center text-muted">{empty ?? "Nobody here yet."}</div>;
+  if (!rows.length) {
+    return <div className="rounded-[28px] border border-dashed border-line p-10 text-center text-muted">{empty ?? "Nobody here yet."}</div>;
+  }
   return (
-    <ol className="grid gap-2.5">
+    <ol className="grid gap-4">
       {rows.map((r) => (
         <BoardItem key={r.id} row={r} claimHref={claimHref} />
       ))}
@@ -90,16 +97,17 @@ export function BoardList({ rows, claimHref, empty }: { rows: BoardRow[]; claimH
   );
 }
 
-export function BoardTabs({ active, base = "" }: { active: "all-time" | "today"; base?: string }) {
+/** The centered All-time / Today switch. */
+export function BoardTabs({ active, base = "" }: { active: BoardKind; base?: string }) {
   const tab = (on: boolean) =>
-    `rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${on ? "bg-fg text-bg" : "text-muted hover:text-fg"}`;
+    `flex items-center gap-2 rounded-full px-4 py-1.5 font-semibold transition ${on ? "bg-brand text-white shadow-sm" : "text-brand hover:bg-brand-tint"}`;
   return (
     <div className="inline-flex rounded-full border border-line bg-surface p-1">
       <Link href={base || "/"} className={tab(active === "all-time")}>
-        All-time
+        <Trophy size={17} strokeWidth={1.75} aria-hidden="true" /> All-time
       </Link>
       <Link href={base ? `${base}?board=today` : "/today"} className={tab(active === "today")}>
-        Today
+        <span className={`h-2 w-2 rounded-full ${active === "today" ? "bg-white" : "bg-brand"}`} /> Today
       </Link>
     </div>
   );
@@ -107,15 +115,19 @@ export function BoardTabs({ active, base = "" }: { active: "all-time" | "today";
 
 export function Pagination({ page, pages, href }: { page: number; pages: number; href: (p: number) => string }) {
   if (pages <= 1) return null;
-  const nums = Array.from(new Set([1, page - 1, page, page + 1, pages])).filter((p) => p >= 1 && p <= pages).sort((a, b) => a - b);
+  const nums = Array.from(new Set([1, page - 1, page, page + 1, pages]))
+    .filter((p) => p >= 1 && p <= pages)
+    .sort((a, b) => a - b);
   return (
-    <nav className="mt-6 flex items-center justify-center gap-1 text-sm">
+    <nav className="mt-8 flex items-center justify-center gap-1.5 text-sm">
       {nums.map((p, i) => (
-        <span key={p} className="flex items-center gap-1">
+        <span key={p} className="flex items-center gap-1.5">
           {i > 0 && p - nums[i - 1] > 1 && <span className="px-1 text-muted">…</span>}
           <Link
             href={href(p)}
-            className={`min-w-9 rounded-lg border px-2.5 py-1.5 text-center tabular-nums ${p === page ? "border-fg bg-fg text-bg" : "border-line hover:border-fg"}`}
+            className={`grid h-9 min-w-9 place-items-center rounded-full px-3 font-medium tabular-nums transition ${
+              p === page ? "bg-brand text-white" : "bg-surface-2 hover:text-brand"
+            }`}
           >
             {p}
           </Link>

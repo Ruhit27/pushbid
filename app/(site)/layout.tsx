@@ -8,7 +8,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
       <Header />
-      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{children}</main>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-8">{children}</main>
       <Footer />
       <AutoRefresh seconds={15} />
     </>

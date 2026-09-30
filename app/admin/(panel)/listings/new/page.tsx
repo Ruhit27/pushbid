@@ -10,7 +10,7 @@ export default async function NewListingPage() {
         <Link href="/admin/listings" className="text-sm text-muted hover:text-fg">
           ← Listings
         </Link>
-        <h1 className="mt-1 text-2xl font-extrabold tracking-tight">Add listing</h1>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">Add listing</h1>
       </div>
       <ListingForm
         categories={categories}

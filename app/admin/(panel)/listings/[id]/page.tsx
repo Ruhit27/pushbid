@@ -19,7 +19,7 @@ export default async function EditListingPage({ params }: PageProps<"/admin/list
         <Link href="/admin/listings" className="text-sm text-muted hover:text-fg">
           ← Listings
         </Link>
-        <h1 className="mt-1 text-2xl font-extrabold tracking-tight">Edit listing</h1>
+        <h1 className="mt-1 text-2xl font-semibold tracking-tight">Edit listing</h1>
         {!listing.hidden && (
           <Link href={`/product/${listing.slug}`} className="text-sm text-brand hover:underline">
             View on site ↗

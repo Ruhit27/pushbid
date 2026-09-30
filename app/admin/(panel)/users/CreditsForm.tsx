@@ -15,10 +15,10 @@ export function CreditsForm({ id, credits }: { id: string; credits: number }) {
         min={0}
         step={1}
         defaultValue={credits}
-        className="w-28 rounded-lg border border-line bg-bg px-2 py-1.5 tabular-nums outline-none focus:border-brand"
+        className="w-28 rounded-full border border-line bg-bg px-2 py-1.5 tabular-nums outline-none focus:border-brand"
         aria-label="Credits"
       />
-      <button disabled={pending} className="rounded-lg border border-line px-2.5 py-1.5 text-xs font-semibold hover:border-fg">
+      <button disabled={pending} className="rounded-full border border-line px-2.5 py-1.5 text-xs font-semibold hover:border-fg">
         Set
       </button>
       {(state.ok || state.error) && <span className={`text-xs ${state.error ? "text-red-600" : "text-muted"}`}>{state.error ?? state.ok}</span>}

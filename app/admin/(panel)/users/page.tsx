@@ -15,8 +15,8 @@ export default async function AdminUsers() {
   const spentBy = new Map(spend.map((s) => [String(s._id), s]));
   return (
     <div className="grid gap-6">
-      <h1 className="text-2xl font-extrabold tracking-tight">Users</h1>
-      <div className="overflow-x-auto rounded-2xl border border-line bg-surface">
+      <h1 className="text-2xl font-semibold tracking-tight">Users</h1>
+      <div className="overflow-x-auto rounded-3xl border border-line bg-surface">
         <table className="w-full text-sm">
           <thead className="bg-surface-2 text-left text-xs text-muted">
             <tr>

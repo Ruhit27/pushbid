@@ -12,8 +12,8 @@ export function LogoMark({ size = 28 }: { size?: number }) {
 export function Logo() {
   return (
     <span className="inline-flex items-center gap-2">
-      <LogoMark />
-      <span className="text-lg font-extrabold tracking-tight">
+      <LogoMark size={32} />
+      <span className="text-2xl font-semibold tracking-tight">
         push<span className="text-brand">bid</span>
       </span>
     </span>

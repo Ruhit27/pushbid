@@ -1,12 +1,13 @@
 import "server-only";
 import { Types, type PipelineStage } from "mongoose";
+import { categoryIcon, type IconKey } from "./category-icons";
 import { connectDb } from "./db";
 import { Category, Claim, Listing, type CategoryDoc, type ListingDoc } from "./models";
 import { amountToTakeFirst, utcDay, utcDayStart } from "./rules";
 
 export const PAGE_SIZE = 50;
 
-export type CategoryInfo = { id: string; slug: string; name: string; shortName: string };
+export type CategoryInfo = { id: string; slug: string; name: string; shortName: string; icon: IconKey };
 
 export type BoardRow = {
   id: string;
@@ -67,7 +68,7 @@ export async function getCategoryBySlug(slug: string): Promise<CategoryInfo | nu
 }
 
 function toCategoryInfo(c: CategoryDoc): CategoryInfo {
-  return { id: c._id.toString(), slug: c.slug, name: c.name, shortName: c.shortName };
+  return { id: c._id.toString(), slug: c.slug, name: c.name, shortName: c.shortName, icon: categoryIcon(c.slug, c.name) };
 }
 
 function hostOf(url: string) {

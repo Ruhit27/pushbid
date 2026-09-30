@@ -1,37 +1,44 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 :root {
   --brand: #ff5a1f;
   --brand-strong: #e84a12;
-  --brand-soft: #fff1ea;
-  --bg: #fbfaf8;
+  --brand-soft: #fde7dd;
+  --brand-tint: #fbeee8;
+  --bg: #fbf7f3;
   --surface: #ffffff;
-  --surface-2: #f3f1ed;
-  --line: #e6e2dc;
-  --fg: #16130f;
-  --muted: #6d665d;
+  --surface-2: #f3ebe5;
+  --line: #ebe1d9;
+  --fg: #1f1a17;
+  --muted: #7d716a;
   --gold: #c98a00;
+  --ok: #16a34a;
+  color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --brand: #ff6a33;
-    --brand-strong: #ff5a1f;
-    --brand-soft: #2a160d;
-    --bg: #0c0b0a;
-    --surface: #151311;
-    --surface-2: #1d1a17;
-    --line: #2b2723;
-    --fg: #f4efe9;
-    --muted: #9b9389;
-    --gold: #f2b53a;
-  }
+:root[data-theme="dark"] {
+  --brand: #ff6a33;
+  --brand-strong: #ff5a1f;
+  --brand-soft: #3d251c;
+  --brand-tint: #2d211d;
+  --bg: #1b1513;
+  --surface: #241d1a;
+  --surface-2: #2e2521;
+  --line: #3a302b;
+  --fg: #f7f0eb;
+  --muted: #a6978e;
+  --gold: #f2b53a;
+  --ok: #22c55e;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-brand: var(--brand);
   --color-brand-strong: var(--brand-strong);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-tint: var(--brand-tint);
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
@@ -39,19 +46,31 @@
   --color-fg: var(--fg);
   --color-muted: var(--muted);
   --color-gold: var(--gold);
-  --font-sans: var(--font-geist-sans);
+  --color-ok: var(--ok);
+  --font-sans: var(--font-poppins);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-poppins), system-ui, sans-serif;
 }
 
-.prose-page h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
-.prose-page h2 { font-size: 1.2rem; font-weight: 700; margin: 2rem 0 0.6rem; }
-.prose-page p, .prose-page li { color: var(--muted); line-height: 1.7; }
+/* The pre-paint script in app/layout.tsx always sets data-theme, so the dark palette only needs the one selector above. */
+
+@layer base {
+  /* A grid's default column may shrink, so long unbreakable content (truncated titles, scrolling chip bars)
+     can't stretch the page wider than the screen. Any grid-cols-* utility overrides this. */
+  .grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+.prose-page h1 { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 1rem; line-height: 1.1; }
+.prose-page h2 { font-size: 1.2rem; font-weight: 600; margin: 2rem 0 0.6rem; }
+.prose-page p, .prose-page li { color: var(--muted); line-height: 1.75; }
 .prose-page ul { list-style: disc; padding-left: 1.25rem; display: grid; gap: 0.35rem; }
 .prose-page a { color: var(--brand); text-decoration: underline; text-underline-offset: 3px; }
-.prose-page strong { color: var(--fg); }
+.prose-page strong { color: var(--fg); font-weight: 600; }

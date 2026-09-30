@@ -13,7 +13,9 @@ export default async function SignInPage({ searchParams }: PageProps<"/signin">)
       <p className="text-muted">New accounts start with free credits to spend on Claims.</p>
       {error && (
         <p className="rounded-lg bg-brand-soft px-3 py-2 text-sm text-brand-strong">
-          {error === "Configuration" ? "Google sign-in isn't set up yet." : "Sign-in failed. Please try again."}
+          {error === "Configuration"
+            ? "Google sign-in isn't set up yet. Add AUTH_GOOGLE_ID and AUTH_GOOGLE_SECRET to .env.local (see README)."
+            : "Sign-in failed. Please try again."}
         </p>
       )}
       <form action={signInWithGoogle}>

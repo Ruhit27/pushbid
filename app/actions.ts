@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { auth, signIn, signOut } from "@/auth";
 import { ClaimError, makeClaim } from "@/lib/claims";
 import { connectDb } from "@/lib/db";
@@ -86,6 +87,7 @@ export async function claimAction(input: {
 }
 
 export async function signInWithGoogle(formData: FormData) {
+  if (!process.env.AUTH_GOOGLE_ID || !process.env.AUTH_GOOGLE_SECRET) redirect("/signin?error=Configuration");
   const next = String(formData.get("next") ?? "/");
   await signIn("google", { redirectTo: next.startsWith("/") && !next.startsWith("//") ? next : "/" });
 }

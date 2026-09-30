@@ -55,10 +55,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           { email },
           {
             $set: { name: profile?.name ?? token.name ?? "", image: (profile?.picture as string) ?? token.picture ?? "" },
-            $setOnInsert: { email, credits: STARTING_CREDITS },
+            $setOnInsert: { email, credits: STARTING_CREDITS, pendingWelcome: "new" },
           },
           { upsert: true, returnDocument: "after" },
         );
+        // A new user who hasn't seen their popup yet keeps it; everyone else gets the returning one.
+        if (user.pendingWelcome !== "new") await User.updateOne({ _id: user._id }, { pendingWelcome: "back" });
         token.role = "user";
         token.uid = user._id.toString();
       }

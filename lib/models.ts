@@ -8,6 +8,8 @@ export interface UserDoc {
   name: string;
   image: string;
   credits: number;
+  /** Which sign-in popup the user still has to see, cleared once they close it. */
+  pendingWelcome: "new" | "back" | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -61,6 +63,7 @@ const userSchema = new Schema<UserDoc>(
     name: { type: String, default: "" },
     image: { type: String, default: "" },
     credits: { type: Number, required: true, min: 0 },
+    pendingWelcome: { type: String, enum: ["new", "back", null], default: null },
   },
   { timestamps: true },
 );

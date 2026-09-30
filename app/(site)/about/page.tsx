@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { siteStats } from "@/lib/boards";
-import { compact, usd } from "@/lib/format";
+import { usd } from "@/lib/format";
+import { CountUp } from "@/app/_components/CountUp";
 
 export const metadata: Metadata = { title: "About" };
 
@@ -15,14 +16,16 @@ export default async function AboutPage() {
         to spend more than the one above you. There are no upvotes to farm, no launch-day lottery, and no reviewers to win over.
       </p>
       <div className="not-prose my-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[
-          [compact(stats.listings), "listings"],
-          [usd(stats.totalSpend), "spent"],
-          [compact(stats.addedToday), "added today"],
-          [usd(stats.todaySpend), "spent today"],
-        ].map(([v, l]) => (
+        {([
+          [stats.listings, "", "listings"],
+          [stats.totalSpend, "$", "spent"],
+          [stats.addedToday, "", "added today"],
+          [stats.todaySpend, "$", "spent today"],
+        ] as const).map(([v, prefix, l]) => (
           <div key={l} className="rounded-3xl border border-line bg-surface p-4">
-            <p className="text-2xl font-semibold tabular-nums">{v}</p>
+            <p className="text-2xl font-semibold tabular-nums">
+              <CountUp value={v} prefix={prefix} />
+            </p>
             <p className="text-xs text-muted">{l}</p>
           </div>
         ))}

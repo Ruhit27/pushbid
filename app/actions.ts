@@ -2,12 +2,13 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { isValidObjectId } from "mongoose";
 import { auth, signIn, signOut } from "@/auth";
 import { ClaimError, makeClaim } from "@/lib/claims";
 import { connectDb } from "@/lib/db";
 import { fallbackIcon, previewLink, resolveLink } from "@/lib/fetch-meta";
 import { LinkError } from "@/lib/link";
-import { Category, Listing, type CategoryDoc, type ListingDoc } from "@/lib/models";
+import { Category, Listing, User, type CategoryDoc, type ListingDoc } from "@/lib/models";
 import { listingRanks } from "@/lib/boards";
 
 export type PreviewResult =
@@ -90,6 +91,14 @@ export async function signInWithGoogle(formData: FormData) {
   if (!process.env.AUTH_GOOGLE_ID || !process.env.AUTH_GOOGLE_SECRET) redirect("/signin?error=Configuration");
   const next = String(formData.get("next") ?? "/");
   await signIn("google", { redirectTo: next.startsWith("/") && !next.startsWith("//") ? next : "/" });
+}
+
+/** Marks the signed-in user's sign-in popup as seen. */
+export async function dismissWelcome() {
+  const session = await auth();
+  if (!session?.user.id || !isValidObjectId(session.user.id)) return;
+  await connectDb();
+  await User.updateOne({ _id: session.user.id }, { pendingWelcome: null });
 }
 
 export async function signOutAction() {

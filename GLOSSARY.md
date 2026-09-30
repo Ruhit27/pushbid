@@ -50,8 +50,12 @@ The Board ranking Listings by Spend since the current UTC midnight. It resets at
 The Board for one past or current UTC calendar day. Once that day ends, it is frozen as an archive.
 
 **Credits**:
-The balance a user spends on Claims, shown in dollars. Every new user starts with a free grant.
+The balance a user spends on Claims, shown in dollars. Every new user starts with Starting Credits.
 _Avoid_: Coins, tokens, wallet, money
+
+**Starting Credits**:
+The one-time grant of Credits a user receives the first time they sign in. Returning users receive nothing more for signing in.
+_Avoid_: Bonus, free grant, welcome credits, sign-up reward
 
 **Demo Listing**:
 A Listing added as sample content, which can be removed in bulk before launch.

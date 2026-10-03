@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { usd } from "@/lib/format";
-import { STARTING_CREDITS } from "@/lib/rules";
 import { getViewer } from "@/lib/viewer";
 import { yourListings } from "@/lib/welcome";
 import { ListingIcon } from "./Board";
@@ -16,7 +14,7 @@ function Movement({ rank, before }: { rank: number; before: number }) {
   );
 }
 
-/** The popup a user sees right after signing in with Google: the Starting Credits for a new user, a catch-up for a returning one. */
+/** The popup a user sees right after signing in with Google: a welcome for a new user, a catch-up for a returning one. */
 export async function Welcome() {
   const viewer = await getViewer();
   if (!viewer?.pendingWelcome) return null;
@@ -24,12 +22,12 @@ export async function Welcome() {
   if (viewer.pendingWelcome === "new") {
     return (
       <WelcomePopup
-        title={`You've got ${usd(STARTING_CREDITS)} in Credits`}
-        toast={`Signed in · ${usd(STARTING_CREDITS)} in Credits added`}
+        title="Welcome to Push Bid"
+        toast="Signed in · welcome to Push Bid"
         claimLabel="Claim your first spot"
         bigCelebration
       >
-        <p className="text-muted">Spend them on Claims to put a product on the board. Higher Spend, higher Rank.</p>
+        <p className="text-muted">Pay to put your product on the board. Higher Spend, higher Rank.</p>
       </WelcomePopup>
     );
   }
@@ -39,18 +37,10 @@ export async function Welcome() {
   return (
     <WelcomePopup
       title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
-      toast={`Welcome back · ${usd(viewer.credits)} in Credits`}
-      claimLabel={viewer.credits > 0 ? "Claim" : null}
+      toast="Welcome back"
+      claimLabel="Claim"
     >
-      <p className="text-muted">
-        {viewer.credits > 0 ? (
-          <>
-            You have <strong className="text-fg">{usd(viewer.credits)}</strong> in Credits.
-          </>
-        ) : (
-          "You've spent all your Credits."
-        )}
-      </p>
+      <p className="text-muted">{listings.length > 0 ? "Here's how your listings have moved." : "Put your product on the board in a few clicks."}</p>
       {listings.length > 0 && (
         <div className="mt-5">
           <p className="mb-2 text-xs font-medium text-muted">Your listings on the All-time board, since your last Claim</p>

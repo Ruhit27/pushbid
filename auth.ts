@@ -4,7 +4,6 @@ import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { connectDb } from "@/lib/db";
 import { User } from "@/lib/models";
-import { STARTING_CREDITS } from "@/lib/rules";
 
 declare module "next-auth" {
   interface Session {
@@ -55,7 +54,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           { email },
           {
             $set: { name: profile?.name ?? token.name ?? "", image: (profile?.picture as string) ?? token.picture ?? "" },
-            $setOnInsert: { email, credits: STARTING_CREDITS, pendingWelcome: "new" },
+            $setOnInsert: { email, pendingWelcome: "new" },
           },
           { upsert: true, returnDocument: "after" },
         );

@@ -28,7 +28,7 @@ export default function RulesPage() {
 
       <h2>What a rank costs</h2>
       <ul>
-        <li>Amounts are whole dollars in Credits. A new listing starts at <strong>$10</strong>, and no listing can go above <strong>$999,999</strong>.</li>
+        <li>Amounts are whole US dollars, paid once per Claim. A new listing starts at <strong>$10</strong>, and no listing can go above <strong>$999,999</strong>.</li>
         <li>To take <strong>#1</strong> you need at least <strong>$5 more</strong> than the listing currently at #1. Smaller amounts still land on the board, just lower down.</li>
         <li>To take <strong>today&apos;s #1</strong> you need at least $5 more than the most any other listing has spent since midnight UTC.</li>
         <li>If two listings have spent the same amount, whichever reached that amount first stays ahead.</li>
@@ -50,8 +50,8 @@ export default function RulesPage() {
 
       <h2>After you claim</h2>
       <ul>
-        <li>Your listing is public right away, and Clicks go to the link you submitted.</li>
-        <li>Claims are final. Being outranked, the Today board resetting, or removal for breaking these rules doesn&apos;t give Credits back.</li>
+        <li>Your listing is public as soon as your payment is confirmed, and Clicks go to the link you submitted.</li>
+        <li>Claims are final. Being outranked, the Today board resetting, or removal for breaking these rules doesn&apos;t give your payment back.</li>
         <li>An admin can recategorize, edit or remove any listing.</li>
       </ul>
     </article>

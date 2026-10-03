@@ -7,7 +7,6 @@ export interface UserDoc {
   email: string;
   name: string;
   image: string;
-  credits: number;
   /** Which sign-in popup the user still has to see, cleared once they close it. */
   pendingWelcome: "new" | "back" | null;
   createdAt: Date;
@@ -57,12 +56,31 @@ export interface ClaimDoc {
   createdAt: Date;
 }
 
+export interface CheckoutDoc {
+  _id: Types.ObjectId;
+  user: Types.ObjectId;
+  /** The Listing's normalized link, as resolved when the Checkout started. */
+  key: string;
+  url: string;
+  kind: "site" | "x";
+  /** Only used if the Listing is still new when the payment lands. */
+  details: { title: string; description: string; iconUrl: string; category: Types.ObjectId };
+  /** Whole dollars, charged through Dodo Payments and added to the Listing's Spend once paid. */
+  amount: number;
+  status: "pending" | "paid" | "failed";
+  sessionId: string;
+  paymentId: string;
+  /** Set once paid: where the Claim landed. */
+  result: { slug: string; rank: number } | null;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 const userSchema = new Schema<UserDoc>(
   {
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     name: { type: String, default: "" },
     image: { type: String, default: "" },
-    credits: { type: Number, required: true, min: 0 },
     pendingWelcome: { type: String, enum: ["new", "back", null], default: null },
   },
   { timestamps: true },
@@ -116,6 +134,28 @@ claimSchema.index({ createdAt: -1 });
 claimSchema.index({ user: 1, createdAt: -1 });
 claimSchema.index({ listing: 1, createdAt: -1 });
 
+const checkoutSchema = new Schema<CheckoutDoc>(
+  {
+    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    key: { type: String, required: true },
+    url: { type: String, required: true },
+    kind: { type: String, enum: ["site", "x"], default: "site" },
+    details: {
+      title: { type: String, default: "" },
+      description: { type: String, default: "" },
+      iconUrl: { type: String, default: "" },
+      category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
+    },
+    amount: { type: Number, required: true, min: 1 },
+    status: { type: String, enum: ["pending", "paid", "failed"], default: "pending" },
+    sessionId: { type: String, default: "" },
+    paymentId: { type: String, default: "" },
+    result: { type: { slug: String, rank: Number }, default: null },
+  },
+  { timestamps: true },
+);
+checkoutSchema.index({ user: 1, createdAt: -1 });
+
 function model<T>(name: string, schema: Schema<T>): Model<T> {
   return (mongoose.models[name] as Model<T> | undefined) ?? mongoose.model<T>(name, schema);
 }
@@ -124,3 +164,4 @@ export const User = model<UserDoc>("User", userSchema);
 export const Category = model<CategoryDoc>("Category", categorySchema);
 export const Listing = model<ListingDoc>("Listing", listingSchema);
 export const Claim = model<ClaimDoc>("Claim", claimSchema);
+export const Checkout = model<CheckoutDoc>("Checkout", checkoutSchema);

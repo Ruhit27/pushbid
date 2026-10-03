@@ -4,7 +4,6 @@ export const MIN_NEW_LISTING = 10;
 export const MAX_SPEND = 999_999;
 export const TOP_MARGIN = 5;
 export const MIN_RAISE = 1;
-export const STARTING_CREDITS = 1_000;
 
 /** Where a Listing stands on one Board before a Claim, as far as the +$5 rule for #1 cares. */
 export type BoardStanding = {

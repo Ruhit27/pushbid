@@ -8,7 +8,7 @@ import { requireAdmin, signIn, signOut } from "@/auth";
 import { connectDb } from "@/lib/db";
 import { fallbackIcon } from "@/lib/fetch-meta";
 import { LinkError, normalizeLink, slugFromKey } from "@/lib/link";
-import { Category, Claim, Listing, User } from "@/lib/models";
+import { Category, Claim, Listing } from "@/lib/models";
 import { MAX_SPEND } from "@/lib/rules";
 
 export type FormState = { error?: string; ok?: string };
@@ -162,16 +162,4 @@ export async function deleteCategory(_prev: FormState, fd: FormData): Promise<Fo
   await Category.deleteOne({ _id: id });
   refreshAll();
   return { ok: "Deleted." };
-}
-
-export async function setCredits(_prev: FormState, fd: FormData): Promise<FormState> {
-  await requireAdmin();
-  await connectDb();
-  const id = String(fd.get("id") ?? "");
-  const credits = Number(fd.get("credits"));
-  if (!isValidObjectId(id)) return { error: "Unknown user." };
-  if (!Number.isInteger(credits) || credits < 0) return { error: "Credits must be a whole number, 0 or more." };
-  await User.updateOne({ _id: id }, { credits });
-  revalidatePath("/admin/users");
-  return { ok: "Saved." };
 }

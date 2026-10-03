@@ -12,7 +12,7 @@ export default function PrivacyPage() {
       <h2>What we store</h2>
       <ul>
         <li>Your Google account&apos;s name, email address and profile picture, so we can sign you in and show your account.</li>
-        <li>Your Credits balance and the Claims you make.</li>
+        <li>The Claims you make and their payment references. Card details are handled by Dodo Payments and never reach us.</li>
         <li>The public details of listings: link, title, description, icon, category, Spend and Click count.</li>
       </ul>
       <h2>What is public</h2>

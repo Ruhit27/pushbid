@@ -14,6 +14,10 @@ A public product leaderboard where rank is what you spend. The terms used throug
    AUTH_GOOGLE_SECRET=
    ADMIN_EMAIL=you@example.com
    ADMIN_PASSWORD=choose-a-long-password
+   DODO_PAYMENTS_API_KEY=
+   DODO_PAYMENTS_WEBHOOK_KEY=   # whsec_...
+   DODO_PAYMENTS_ENVIRONMENT=test_mode   # live_mode in production
+   DODO_PRODUCT_ID=             # a one-time, pay-what-you-want product
    ```
 
 3. Google sign-in: in [Google Cloud Console → Credentials](https://console.cloud.google.com/apis/credentials), create an **OAuth client ID** (type: Web application). Add these authorized redirect URIs:
@@ -21,12 +25,13 @@ A public product leaderboard where rank is what you spend. The terms used throug
    - `https://YOUR-DOMAIN/api/auth/callback/google`
 
    Then copy the client ID and secret into `.env.local`.
-4. `npm run seed` adds the categories and Demo Listings. It's safe to run again.
-5. `npm run dev`
+4. Payments: in the [Dodo Payments dashboard](https://app.dodopayments.com), create a one-time product with **Pay What You Want** pricing (minimum $10) and put its ID in `DODO_PRODUCT_ID`. Each Claim charges its own amount against that product. Create an API key, then add a webhook pointing to `https://YOUR-DOMAIN/api/webhooks/dodo` with the `payment.succeeded`, `payment.failed` and `payment.cancelled` events, and copy its signing secret into `DODO_PAYMENTS_WEBHOOK_KEY`. Locally, the return page confirms payments directly with Dodo, so Claims land without the webhook.
+5. `npm run seed` adds the categories and Demo Listings. It's safe to run again.
+6. `npm run dev`
 
 ## Admin
 
-Sign in at `/admin/login` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. From the admin panel you can add and edit Listings, manage categories, set users' Credits, and delete all demo data before launch.
+Sign in at `/admin/login` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`. From the admin panel you can add and edit Listings, manage categories, see users and what they've spent, and delete all demo data before launch.
 
 ## Deploying to Vercel
 

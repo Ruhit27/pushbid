@@ -17,10 +17,10 @@ export default function TermsPage() {
         <li>Listings must follow the rules. We may edit, recategorize, hide or remove any listing at any time.</li>
         <li>Listed websites should show valid company or owner details.</li>
       </ul>
-      <h2>Credits and Claims</h2>
+      <h2>Payments and Claims</h2>
       <ul>
-        <li>Credits have no cash value and can&apos;t be transferred or withdrawn.</li>
-        <li>Claims are final. Credits spent on a Claim are not returned, including when a listing is outranked or removed.</li>
+        <li>Each Claim is a one-time payment, processed by Dodo Payments. Push Bid never sees your card details.</li>
+        <li>Claims are final. Payments for a Claim are not refunded, including when a listing is outranked or removed.</li>
         <li>Your rank is set when the Claim is recorded and can change whenever someone else claims.</li>
       </ul>
       <h2>No guarantees</h2>

@@ -2,7 +2,6 @@
 
 import { Globe, Minus, Plus } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { claimAction, previewAction, signInWithGoogle, type PreviewResult } from "@/app/actions";
 import type { BoardKind, CategoryInfo } from "@/lib/boards";
@@ -18,7 +17,6 @@ type Props = {
   board: BoardKind;
   defaultCategoryId?: string;
   signedIn: boolean;
-  credits: number;
   signInNext: string;
 };
 
@@ -31,7 +29,6 @@ type Draft = { link: string; categoryId: string; amount: number; savedAt: number
 const DRAFT_TTL_MS = 15 * 60 * 1000;
 
 export function ClaimBox(props: Props) {
-  const router = useRouter();
   const [amount, setAmount] = useState(Math.min(MAX_SPEND, Math.max(MIN_NEW_LISTING, props.initialAmount ?? props.firstAmount)));
   const [link, setLink] = useState("");
   const [categoryId, setCategoryId] = useState(props.defaultCategoryId ?? "");
@@ -39,7 +36,6 @@ export function ClaimBox(props: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [error, setError] = useState("");
-  const [done, setDone] = useState<null | { slug: string; rank: number; charge: number }>(null);
   const [pending, startTransition] = useTransition();
   const signInForm = useRef<HTMLFormElement>(null);
 
@@ -68,7 +64,6 @@ export function ClaimBox(props: Props) {
 
   function submit() {
     setError("");
-    setDone(null);
     if (!props.signedIn) {
       try {
         sessionStorage.setItem(DRAFT_KEY, JSON.stringify({ link, categoryId, amount, savedAt: Date.now() } satisfies Draft));
@@ -99,10 +94,8 @@ export function ClaimBox(props: Props) {
         setError(res.error);
         return;
       }
-      setDone(res);
-      setPreview(null);
-      setLink("");
-      router.refresh();
+      // Off to Dodo Payments; the Claim lands once the payment is confirmed.
+      window.location.assign(res.checkoutUrl);
     });
   }
 
@@ -173,19 +166,10 @@ export function ClaimBox(props: Props) {
 
       <div className="mx-auto max-w-3xl">
         {!props.signedIn && (
-          <p className="mt-3 text-center text-sm text-muted">You&apos;ll sign in with Google to claim. New accounts get free credits.</p>
+          <p className="mt-3 text-center text-sm text-muted">You&apos;ll sign in with Google, then pay securely through Dodo Payments.</p>
         )}
 
         {error && <p className="mt-4 rounded-2xl bg-brand-soft px-4 py-3 text-sm font-medium text-brand-strong">{error}</p>}
-
-        {done && (
-          <p className="mt-4 rounded-2xl bg-brand-soft px-4 py-3 text-sm">
-            Claimed! Your listing is now <strong>#{done.rank}</strong> on the All-time board ({usd(done.charge)} spent).{" "}
-            <Link href={`/product/${done.slug}`} className="font-semibold text-brand underline">
-              See it
-            </Link>
-          </p>
-        )}
 
         {preview && (
           <div className="mt-5 rounded-[28px] bg-brand-soft p-5">
@@ -227,7 +211,7 @@ export function ClaimBox(props: Props) {
             </div>
             <div className="mt-4 flex flex-wrap items-center justify-between gap-3">
               <p className="text-sm text-muted">
-                You pay <strong className="text-fg">{usd(Math.max(0, charge))}</strong> · balance {usd(props.credits)}
+                You pay <strong className="text-fg">{usd(Math.max(0, charge))}</strong> · one-time payment
               </p>
               <div className="flex gap-2">
                 <button type="button" onClick={() => setPreview(null)} className="rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold hover:border-fg">
@@ -239,7 +223,7 @@ export function ClaimBox(props: Props) {
                   disabled={pending || charge < 1 || (!preview.existing && !categoryId)}
                   className="rounded-full bg-brand px-6 py-2.5 text-sm font-semibold text-white hover:bg-brand-strong disabled:opacity-45"
                 >
-                  {pending ? "Claiming…" : `Pay ${usd(Math.max(0, charge))} & claim`}
+                  {pending ? "Opening checkout…" : `Pay ${usd(Math.max(0, charge))} & claim`}
                 </button>
               </div>
             </div>

@@ -25,7 +25,7 @@ The total amount put toward a Listing within a Board's time window.
 _Avoid_: Bid, price, budget
 
 **Claim**:
-One act of putting an amount toward a Listing, which places it on the boards.
+One paid act of putting an amount toward a Listing, which places it on the boards.
 _Avoid_: Bid, purchase, order
 
 **Raise**:
@@ -49,13 +49,9 @@ The Board ranking Listings by Spend since the current UTC midnight. It resets at
 **Daily Board**:
 The Board for one past or current UTC calendar day. Once that day ends, it is frozen as an archive.
 
-**Credits**:
-The balance a user spends on Claims, shown in dollars. Every new user starts with Starting Credits.
-_Avoid_: Coins, tokens, wallet, money
-
-**Starting Credits**:
-The one-time grant of Credits a user receives the first time they sign in. Returning users receive nothing more for signing in.
-_Avoid_: Bonus, free grant, welcome credits, sign-up reward
+**Checkout**:
+A Claim waiting for its payment through Dodo Payments. It becomes a Claim only once the payment succeeds; users hold no balance.
+_Avoid_: Order, pending claim, credits
 
 **Demo Listing**:
 A Listing added as sample content, which can be removed in bulk before launch.

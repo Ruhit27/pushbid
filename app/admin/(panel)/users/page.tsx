@@ -1,7 +1,6 @@
 import { connectDb } from "@/lib/db";
 import { timeAgo } from "@/lib/format";
 import { Claim, User, type UserDoc } from "@/lib/models";
-import { CreditsForm } from "./CreditsForm";
 
 export default async function AdminUsers() {
   await connectDb();
@@ -24,7 +23,6 @@ export default async function AdminUsers() {
               <th className="px-4 py-2">Joined</th>
               <th className="px-4 py-2 text-right">Claims</th>
               <th className="px-4 py-2 text-right">Spent</th>
-              <th className="px-4 py-2">Credits</th>
             </tr>
           </thead>
           <tbody>
@@ -39,15 +37,12 @@ export default async function AdminUsers() {
                   <td className="px-4 py-2 text-muted">{timeAgo(u.createdAt)}</td>
                   <td className="px-4 py-2 text-right tabular-nums">{s?.n ?? 0}</td>
                   <td className="px-4 py-2 text-right tabular-nums">${(s?.total ?? 0).toLocaleString("en-US")}</td>
-                  <td className="px-4 py-2">
-                    <CreditsForm id={u._id.toString()} credits={u.credits} />
-                  </td>
                 </tr>
               );
             })}
             {!users.length && (
               <tr>
-                <td colSpan={5} className="px-4 py-10 text-center text-muted">
+                <td colSpan={4} className="px-4 py-10 text-center text-muted">
                   Nobody has signed in yet.
                 </td>
               </tr>

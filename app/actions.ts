@@ -1,15 +1,17 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { isValidObjectId } from "mongoose";
 import { auth, signIn, signOut } from "@/auth";
-import { ClaimError, makeClaim } from "@/lib/claims";
+import { ClaimError, prepareClaim } from "@/lib/claims";
 import { connectDb } from "@/lib/db";
 import { fallbackIcon, previewLink, resolveLink } from "@/lib/fetch-meta";
 import { LinkError } from "@/lib/link";
-import { Category, Listing, User, type CategoryDoc, type ListingDoc } from "@/lib/models";
+import { Category, Checkout, Listing, User, type CategoryDoc, type ListingDoc } from "@/lib/models";
 import { listingRanks } from "@/lib/boards";
+import { PaymentsNotConfigured, startPayment } from "@/lib/payments";
+import { getViewer } from "@/lib/viewer";
 
 export type PreviewResult =
   | { ok: false; error: string }
@@ -55,10 +57,9 @@ export async function previewAction(input: string): Promise<PreviewResult> {
   }
 }
 
-export type ClaimActionResult =
-  | { ok: false; error: string }
-  | { ok: true; slug: string; charge: number; rank: number; totalSpend: number };
+export type ClaimActionResult = { ok: false; error: string } | { ok: true; checkoutUrl: string };
 
+/** Checks the Claim, records it as a pending Checkout, and returns the Dodo Payments page to pay on. */
 export async function claimAction(input: {
   link: string;
   targetTotal: number;
@@ -67,23 +68,34 @@ export async function claimAction(input: {
   iconUrl: string;
   categoryId: string;
 }): Promise<ClaimActionResult> {
-  const session = await auth();
-  if (!session?.user.id) return { ok: false, error: "Sign in to make a Claim." };
+  const viewer = await getViewer();
+  if (!viewer) return { ok: false, error: "Sign in to make a Claim." };
   try {
     const link = await resolveLink(input.link);
     const iconUrl = /^https:\/\//.test(input.iconUrl) ? input.iconUrl : fallbackIcon(link);
-    const result = await makeClaim({
-      userId: session.user.id,
-      link,
-      targetTotal: Number(input.targetTotal),
-      details: { title: String(input.title), description: String(input.description), iconUrl, categoryId: String(input.categoryId) },
+    const { charge, categoryId } = await prepareClaim({ link, targetTotal: Number(input.targetTotal), categoryId: String(input.categoryId) });
+    const checkout = await Checkout.create({
+      user: viewer.id,
+      key: link.key,
+      url: link.url,
+      kind: link.kind,
+      details: { title: String(input.title), description: String(input.description), iconUrl, category: categoryId },
+      amount: charge,
     });
-    revalidatePath("/", "layout");
-    return { ok: true, ...result };
+    const h = await headers();
+    const origin = `${h.get("x-forwarded-proto") ?? "http"}://${h.get("host")}`;
+    const payment = await startPayment({
+      checkoutId: checkout.id,
+      amount: charge,
+      customer: { email: viewer.email, name: viewer.name || viewer.email },
+      returnUrl: `${origin}/checkout/${checkout.id}`,
+    });
+    await Checkout.updateOne({ _id: checkout._id }, { sessionId: payment.sessionId });
+    return { ok: true, checkoutUrl: payment.checkoutUrl };
   } catch (err) {
-    if (err instanceof LinkError || err instanceof ClaimError) return { ok: false, error: err.message };
+    if (err instanceof LinkError || err instanceof ClaimError || err instanceof PaymentsNotConfigured) return { ok: false, error: err.message };
     console.error(err);
-    return { ok: false, error: "Something went wrong. Your Credits were not charged." };
+    return { ok: false, error: "We couldn't start the payment. You haven't been charged." };
   }
 }
 

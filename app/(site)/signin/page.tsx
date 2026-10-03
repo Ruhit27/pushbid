@@ -10,7 +10,7 @@ export default async function SignInPage({ searchParams }: PageProps<"/signin">)
   return (
     <div className="mx-auto grid max-w-sm gap-4 py-16 text-center">
       <h1 className="text-3xl font-semibold tracking-tight">Sign in to Push Bid</h1>
-      <p className="text-muted">New accounts start with free credits to spend on Claims.</p>
+      <p className="text-muted">Sign in to put your product on the board.</p>
       {error && (
         <p className="rounded-2xl bg-brand-soft px-3 py-2 text-sm text-brand-strong">
           {error === "Configuration"

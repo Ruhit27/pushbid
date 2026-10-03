@@ -55,12 +55,12 @@ export default async function AccountPage() {
 
       <section className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="rounded-3xl border border-brand/50 bg-brand-soft p-5">
-          <p className="text-sm text-muted">Credits balance</p>
-          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight text-brand">{usd(viewer.credits)}</p>
+          <p className="text-sm text-muted">Spent on Claims</p>
+          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight text-brand">{usd(spent)}</p>
         </div>
         <div className="rounded-3xl border border-line bg-surface p-5">
-          <p className="text-sm text-muted">Spent on Claims</p>
-          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight">{usd(spent)}</p>
+          <p className="text-sm text-muted">Listings</p>
+          <p className="mt-1 text-4xl font-semibold tabular-nums tracking-tight">{byListing.size}</p>
         </div>
       </section>
 

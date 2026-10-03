@@ -82,7 +82,6 @@ export async function BoardPage({ board, category, page, amount }: Options) {
         board={board}
         defaultCategoryId={category?.id}
         signedIn={!!viewer}
-        credits={viewer?.credits ?? 0}
         signInNext={boardHref}
       />
 

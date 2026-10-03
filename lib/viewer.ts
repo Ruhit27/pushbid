@@ -9,11 +9,10 @@ export type Viewer = {
   name: string;
   email: string;
   image: string;
-  credits: number;
   pendingWelcome: UserDoc["pendingWelcome"];
 } | null;
 
-/** The signed-in user with their current Credits, or null for visitors and the Admin. */
+/** The signed-in user, or null for visitors and the Admin. */
 export async function getViewer(): Promise<Viewer> {
   const session = await auth();
   const id = session?.user.id;
@@ -21,5 +20,5 @@ export async function getViewer(): Promise<Viewer> {
   await connectDb();
   const user = await User.findById(id).lean<UserDoc>();
   if (!user) return null;
-  return { id, name: user.name ?? "", email: user.email, image: user.image ?? "", credits: user.credits, pendingWelcome: user.pendingWelcome ?? null };
+  return { id, name: user.name ?? "", email: user.email, image: user.image ?? "", pendingWelcome: user.pendingWelcome ?? null };
 }

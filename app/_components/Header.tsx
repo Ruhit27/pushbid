@@ -52,7 +52,7 @@ export async function Header() {
               ) : (
                 <span className="h-7 w-7 rounded-full bg-brand" />
               )}
-              <span className="font-semibold tabular-nums">{usd(viewer.credits)}</span>
+              <span className="font-semibold">Account</span>
             </Link>
           ) : (
             <form action={signInWithGoogle}>
